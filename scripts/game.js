@@ -4,22 +4,52 @@
 
 Game = {
     timer: 0,
+    timerId: null,
     now: 0,
+    level: null,
+    levels: null
 };
 
 Game.initialize = function () {
+    Game.initializeLevels();
     Game.startLevel();
+};
+
+Game.initializeLevels = function () {
+    Game.levels = [
+	new Game.ButtonsLevel()
+    ];
 };
 
 Game.startLevel = function () {
     Game.setTimer(12000);
     Game.now = Date.now();
-    setInterval(function () {
+    if (Game.level !== null) {
+	Game.level.clear();
+    }
+    Game.level = Game.levels[0];
+    Game.level.start(Game.successLevel, Game.failLevel);
+    Game.timerId = setInterval(function () {
 	var now = Date.now();
 	var delta = now - Game.now;
 	Game.now = now;
-	Game.setTimer(Game.timer - delta);
+	var timer = Game.timer - delta;
+	if (timer <= 0) {
+	    Game.failLevel();
+	} else {
+	    Game.setTimer(Game.timer - delta);
+	}
     }, 70);
+};
+
+Game.successLevel = function () {
+    Game.startLevel();
+};
+
+Game.failLevel = function () {
+    Game.setTimer(0);
+    clearInterval(Game.timerId);
+    console.log("Game over!");
 };
 
 Game.setTimer = function (value) {
@@ -44,6 +74,24 @@ Game.setTimer = function (value) {
     } else {
 	$('#game-timer').removeClass('game-timer-alert');
     }
+};
+
+Game.ButtonsLevel = function () {
+    var self = this;
+    $('#game-level-buttons-button1').click(function () {
+	self.onSuccess();
+    });
+};
+
+Game.ButtonsLevel.prototype.start = function (onSuccess, onFailure) {
+    this.onSuccess = onSuccess;
+    this.onFailure = onFailure;
+    $('#game-level-buttons').show();
+    $('#game-level-instructions').text('Click the "hello" button now!');
+};
+
+Game.ButtonsLevel.prototype.clear = function () {    
+    $('#game-level-buttons').hide();
 };
 
 $(function () {

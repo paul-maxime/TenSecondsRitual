@@ -23,3 +23,11 @@ body {
 .game-timer-alert {
     animation: blink 0.5s step-start 0s infinite;
 }
+
+#game-level {
+    text-align: center;
+}
+
+#game-level-buttons {
+    display: none;
+}
