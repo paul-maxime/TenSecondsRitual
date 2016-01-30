@@ -49,20 +49,20 @@ Game.successLevel = function () {
 Game.failLevel = function () {
     Game.setTimer(0);
     clearInterval(Game.timerId);
-    console.log("Game over!");
+    console.log('Game over!');
 };
 
 Game.setTimer = function (value) {
     Game.timer = value;
-    var seconds = Math.floor(value / 1000) + "";
-    var milliseconds = Math.floor((value / 10) % 100) + "";
+    var seconds = Math.floor(value / 1000) + '';
+    var milliseconds = Math.floor((value / 10) % 100) + '';
     if (seconds.length < 2) {
-	seconds = "0" + seconds;
+	seconds = '0' + seconds;
     }
     if (milliseconds.length < 2) {
-	milliseconds = "0" + milliseconds;
+	milliseconds = '0' + milliseconds;
     }
-    var text = seconds + ":" + milliseconds;
+    var text = seconds + ':' + milliseconds;
     $('#game-timer').text(text);
     if (Game.timer < 5000) {
 	$('#game-timer').addClass('game-timer-warning');
