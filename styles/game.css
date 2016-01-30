@@ -1,0 +1,25 @@
+/*
+ * Ten Seconds Ritual
+ */
+
+body {
+    color: #AFAFAF;
+    background-color: #101010;
+}
+
+#game-timer {
+    font-size: 2.0em;
+    text-align: center;
+}
+
+.game-timer-warning {
+    color: #EF0000;
+}
+
+@keyframes blink {
+    25% { opacity: 0.0; }
+}
+
+.game-timer-alert {
+    animation: blink 0.5s step-start 0s infinite;
+}
