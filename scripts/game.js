@@ -43,11 +43,12 @@ Game.startLevel = function () {
 };
 
 Game.successLevel = function () {
+    clearInterval(Game.timerId);
     Game.startLevel();
 };
 
 Game.failLevel = function () {
-    Game.setTimer(0);
+    Game.setTimer(0); 
     clearInterval(Game.timerId);
     console.log('Game over!');
 };
