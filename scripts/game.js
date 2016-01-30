@@ -41,13 +41,14 @@ Game.startLevel = function () {
 
 Game.successLevel = function () {
     clearInterval(Game.timerId);
+    Game.level.clear();
     Game.startLevel();
 };
 
 Game.failLevel = function () {
-    Game.setTimer(0); 
     clearInterval(Game.timerId);
     Game.level.clear();
+    Game.setTimer(0); 
     $('#game-level-instructions').text('Game over! The entire solar system exploded.');
 };
 
@@ -75,22 +76,29 @@ Game.setTimer = function (value) {
     }
 };
 
+Game.createLevelContainer = function (name) {
+    return $('<div>')
+	.attr('id', 'game-level-' + name)
+	.appendTo($('#game-level'));
+}
+
 Game.ButtonsLevel = function () {
-    var self = this;
-    $('#game-level-buttons-button1').click(function () {
-	self.onSuccess();
-    });
+    this.uiLevel = Game.createLevelContainer('buttons');
 };
 
 Game.ButtonsLevel.prototype.start = function (onSuccess, onFailure) {
     this.onSuccess = onSuccess;
     this.onFailure = onFailure;
-    $('#game-level-buttons').show();
+    this.uiButton = $('<img>')
+	.attr('src', 'assets/images/shapes/tileRed_05.png')
+	.addClass('game-image-button')
+	.appendTo(this.uiLevel);
+    this.uiButton.click(this.onSuccess);
     $('#game-level-instructions').text('Click the "hello" button now!');
 };
 
 Game.ButtonsLevel.prototype.clear = function () {    
-    $('#game-level-buttons').hide();
+    this.uiLevel.empty();
 };
 
 $(function () {
