@@ -32,18 +32,37 @@ body {
 .game-image-button {
 	cursor: pointer;
 	filter: brightness(0.50);
+	-webkit-filter: brightness(0.50);
 	margin-left: 10px;
 }
 
 .game-image-button:hover {
 	filter: brightness(0.75);
+	-webkit-filter: brightness(0.75);
 }
 
 .game-image-button-on {
 	cursor: pointer;
 	filter: brightness(1.0);
+	-webkit-filter: brightness(1.0);
 }
 
 #game-level {
 	text-align: center;
+}
+
+#options-container {
+	position: fixed;
+	right: 15px;
+	bottom: 15px;
+}
+
+#options-container p {
+	margin-top: 5px;
+	margin-bottom: 0px;
+}
+
+.options-link {
+	text-decoration: underline;
+	cursor: pointer;
 }

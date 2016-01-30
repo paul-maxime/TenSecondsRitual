@@ -12,7 +12,9 @@ Game = {
 	sounds: {
 		clock: [],
 		fail: []
-	}
+	},
+	musicEnabled: true,
+	soundEnabled: true,
 };
 
 Game.initialize = function () {
@@ -28,16 +30,37 @@ Game.initialize = function () {
 	for (var i = 0; i < 3; ++i) {
 		Game.sounds.fail.push(new Audio('assets/sounds/zap2.ogg'));
 	}
+
+	$('#options-music').click(Game.toggleMusic);
+	$('#options-sound').click(Game.toggleSound);
 };
 
 Game.playSound = function (sound) {
+	if (!Game.soundEnabled) {
+		return;
+	}
 	for (var i = 0; i < Game.sounds[sound].length; ++i) {
 		if (Game.sounds[sound][i].paused) {
 			Game.sounds[sound][i].play();
-			break
+			break;
 		}
 	}
-}
+};
+
+Game.toggleMusic = function () {
+	Game.musicEnabled = !Game.musicEnabled;
+	if (Game.musicEnabled) {
+		Game.music.play();
+	} else {
+		Game.music.pause();
+	}
+	$('#options-music').text('Music: ' + (Game.musicEnabled ? 'Enabled' : 'OFF'));
+};
+
+Game.toggleSound = function () {
+	Game.soundEnabled = !Game.soundEnabled;
+	$('#options-sound').text('Sound: ' + (Game.soundEnabled ? 'Enabled' : 'OFF'));
+};
 
 Game.initializeLevels = function () {
 	Game.levels = [
