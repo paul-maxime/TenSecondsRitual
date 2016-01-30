@@ -24,9 +24,6 @@ Game.initializeLevels = function () {
 Game.startLevel = function () {
     Game.setTimer(12000);
     Game.now = Date.now();
-    if (Game.level !== null) {
-	Game.level.clear();
-    }
     Game.level = Game.levels[0];
     Game.level.start(Game.successLevel, Game.failLevel);
     Game.timerId = setInterval(function () {
@@ -50,7 +47,8 @@ Game.successLevel = function () {
 Game.failLevel = function () {
     Game.setTimer(0); 
     clearInterval(Game.timerId);
-    console.log('Game over!');
+    Game.level.clear();
+    $('#game-level-instructions').text('Game over! The entire solar system exploded.');
 };
 
 Game.setTimer = function (value) {
