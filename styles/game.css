@@ -3,41 +3,41 @@
  */
 
 body {
-    color: #AFAFAF;
-    background-color: #101010;
+	color: #AFAFAF;
+	background-color: #101010;
 }
 
 #game-timer {
-    font-size: 2.0em;
-    text-align: center;
+	font-size: 2.0em;
+	text-align: center;
 }
 
 .game-timer-warning {
-    color: #EF0000;
+	color: #EF0000;
 }
 
 @keyframes blink {
-    25% { opacity: 0.0; }
+	25% { opacity: 0.0; }
 }
 
 .game-timer-alert {
-    animation: blink 0.5s step-start 0s infinite;
+	animation: blink 0.5s step-start 0s infinite;
 }
 
 .game-image-button {
-    cursor: pointer;
-    filter: brightness(0.50);
+	cursor: pointer;
+	filter: brightness(0.50);
 }
 
 .game-image-button:hover {
-    filter: brightness(0.75);
+	filter: brightness(0.75);
 }
 
 .game-image-button-on {
-    cursor: pointer;
-    filter: brightness(1.0);
+	cursor: pointer;
+	filter: brightness(1.0);
 }
 
 #game-level {
-    text-align: center;
+	text-align: center;
 }
