@@ -24,6 +24,9 @@ Game = {
 	timer: 0,
 	timerId: null,
 	now: 0,
+	start: 0,
+	score: 0,
+	surviveTime: 0,
 	level: null,
 	levels: null,
 	music: null,
@@ -61,6 +64,7 @@ Game.startGame = function () {
 	if (Game.musicEnabled) {
 		Game.music.play();
 	}
+	Game.start = Date.now();
 	Game.startLevel();
 };
 
@@ -102,6 +106,9 @@ Game.startLevel = function () {
 	Game.setTimer(10000);
 	Game.now = Date.now();
 	Game.level = Utils.randomElement(Game.levels);
+	while (Game.level.requiredScore > Game.score) {
+		Game.level = Utils.randomElement(Game.levels);
+	}
 	Game.level.start(Game.successLevel, Game.failLevel);
 	Game.timerId = setInterval(function () {
 		var oldTimer = Game.timer;
@@ -129,6 +136,7 @@ Game.startLevel = function () {
 Game.successLevel = function () {
 	clearInterval(Game.timerId);
 	Game.level.clear();
+	Game.score += 1;
 	Game.startLevel();
 };
 
@@ -139,8 +147,9 @@ Game.failLevel = function () {
 	Game.level = null;
 	Game.setTimer(0); 
 	Game.music.pause();
+	Game.surviveTime = Math.floor((Date.now() - Game.start) / 1000);
 	$('#game-timer').removeClass('game-timer-alert');
-	$('#game-level-instructions').text('Game over! The entire solar system exploded. At least. This is entirely your fault and you should feel bad.');
+	$('#game-level-instructions').html('Game over! The entire solar system exploded.<br>You performed ' + Game.score + ' ritual'+(Game.score===1?'':'s')+' and survived ' + Game.surviveTime + ' seconds.');
 };
 
 Game.setTimer = function (value) {
@@ -175,6 +184,7 @@ Game.createLevelContainer = function (name) {
 
 
 Game.ButtonLevel = function () {
+	this.requiredScore = 0;
 	this.uiLevel = Game.createLevelContainer('buttons');
 };
 
@@ -215,7 +225,7 @@ Game.ButtonLevel.MESSAGES = [
 	'Pressing the [button] is certainly gonna work.',
 	'What you are looking for is the [button].',
 	'Thou shalt press the [button]!',
-	'Do NOT press anything else than the [button]!'
+	'Do NOT press anything other than the [button]!'
 ];
 
 Game.ButtonLevel.prototype.start = function (onSuccess, onFailure) {
@@ -283,6 +293,7 @@ Game.ButtonLevel.prototype.clear = function () {
 
 
 Game.SequenceLevel = function () {
+	this.requiredScore = 10;
 	this.uiLevel = Game.createLevelContainer('buttons');
 };
 
@@ -290,7 +301,7 @@ Game.SequenceLevel.MESSAGES = [
 	'Press the [1] first, then the [2] and finish with the [3].',
 	'The [2] comes after the [1] and the [3] is the last.',
 	'I think you should press the [3]. No, wait, press the [1] then the [2] first.',
-	'The [2] is the bridge between the [3] and the [1], the [1] being the beginning.',
+	'The [2] comes between the [3] and the [1], the [1] being the beginning.',
 	'Thou shalt press the [3] only after pressing the [2] and the [2] only after pressing the [1].',
 	'Activate the [2] after pressing [1], then push the [3]',
 	'The manual says the [1] must be pressed first and the [3] last.',
