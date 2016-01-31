@@ -70,6 +70,64 @@ Game.initialize = function () {
 	$('#options-sound').click(Game.toggleSound);
 	$('#game-level-restart').click(Game.startGame);
 	
+	Game.introduction();
+};
+
+Game.introduction = function () {
+	Game.introductionMessage = '';
+	$('#game-introduction-button').click(function () {
+		Game.playSound('click');
+		$('#game-introduction-button').remove();
+		$('#game-introduction-skip').remove();
+		setTimeout(Game.introductionDialogA, 1000);
+	});
+	$('#game-introduction-skip').click(Game.endIntroduction);
+};
+
+Game.addIntroductionMessage = function (message) {
+	Game.playSound('clock');
+	Game.introductionMessage += '<br>' + message;
+	$('#game-introduction-message').html(Game.introductionMessage);
+};
+
+Game.introductionDialogA = function () {
+	Game.addIntroductionMessage('NO! WHAT HAVE YOU DONE?');
+	setTimeout(Game.introductionDialogB, 2000);
+};
+
+Game.introductionDialogB = function () {
+	Game.addIntroductionMessage('You pushed the button without even knowing what it does!?');
+	setTimeout(Game.introductionDialogC, 3000);
+};
+
+Game.introductionDialogC = function () {
+	Game.addIntroductionMessage('It is a secret mechanism, capable of destroying the entire universe!');
+	setTimeout(Game.introductionDialogD, 3000);
+};
+
+Game.introductionDialogD = function () {
+	Game.addIntroductionMessage('THERE IS NO WAY TO STOP IT!');
+	setTimeout(Game.introductionDialogE, 2000);
+};
+
+Game.introductionDialogE = function () {
+	Game.addIntroductionMessage('We have to use the snooze system.');
+	setTimeout(Game.introductionDialogF, 2000);
+};
+
+Game.introductionDialogF = function () {
+	Game.addIntroductionMessage('It will delay the explosion by 10 seconds.');
+	setTimeout(Game.introductionDialogG, 2000);
+};
+
+Game.introductionDialogG = function () {
+	Game.addIntroductionMessage('THERE IS NO TIME TO EXPLAIN, WE HAVE TO GO NOW!!!');
+	setTimeout(Game.endIntroduction, 4000);
+};
+
+Game.endIntroduction = function () {
+	$('#game-introduction').remove();
+	$('#game-container').show();
 	Game.startGame();
 };
 
@@ -435,7 +493,7 @@ Game.SequenceLevel.MESSAGES = [
 	'I think you should press the [3]. No, wait, press the [1] then the [2] first.',
 	'The [2] comes between the [3] and the [1], the [1] being the beginning.',
 	'Thou shalt press the [3] only after pressing the [2] and the [2] only after pressing the [1].',
-	'Activate the [2] after pressing [1], then push the [3].',
+	'Activate the [2] after pressing the [1], then push the [3].',
 	'The manual says the [1] must be pressed first and the [3] last.',
 	'We do not know the first button you should press, but you should press the [2] and the [3] after.',
 	'Do not panic! The [1], the [2], the [3]! Go!',

@@ -7,6 +7,23 @@ body {
 	background-color: #101010;
 }
 
+#game-introduction {
+	text-align: center;
+	font-size: 1.5em;
+}
+
+#game-introduction-skip {
+	font-size: 0.75em;
+}
+
+.game-little-button {
+	width: 48px;
+}
+
+#game-container {
+	display: none;
+}
+
 #game-timer {
 	font-size: 4.0em;
 	margin: 0;
