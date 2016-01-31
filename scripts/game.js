@@ -215,7 +215,7 @@ Game.ButtonLevel.COLORS = [
 	'Black',
 	'Blue',
 	'Green',
-	'Grey',
+	'White',
 	'Orange',
 	'Pink',
 	'Red',
