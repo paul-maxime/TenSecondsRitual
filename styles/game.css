@@ -33,7 +33,8 @@ body {
 	cursor: pointer;
 	filter: brightness(0.50);
 	-webkit-filter: brightness(0.50);
-	margin-left: 10px;
+	margin-right: 10px;
+	margin-botton: 10px;
 }
 
 .game-image-button:hover {
@@ -45,6 +46,8 @@ body {
 	cursor: pointer;
 	filter: brightness(1.0);
 	-webkit-filter: brightness(1.0);
+	margin-right: 10px;
+	margin-botton: 10px;
 }
 
 #game-level {
