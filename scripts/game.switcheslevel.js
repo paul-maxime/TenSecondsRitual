@@ -88,6 +88,7 @@ Game.SwitchesLevel.prototype.start = function (onSuccess, onFailure) {
 };
 
 Game.SwitchesLevel.prototype.onButtonClick = function (index) {
+	Game.MemoryLevel.lastButton = this.uiButtons[index].data('button');
 	Game.playSound('click');
 	if (!this.uiButtons[index].hasClass('game-image-button-on')) {
 		this.uiButtons[index].removeClass('game-image-button').addClass('game-image-button-on');

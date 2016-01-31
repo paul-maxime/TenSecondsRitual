@@ -157,7 +157,8 @@ Game.initializeLevels = function () {
 	Game.levels = [
 		new Game.ButtonLevel(),
 		new Game.SwitchesLevel(),
-		new Game.SequenceLevel()
+		new Game.SequenceLevel(),
+		new Game.MemoryLevel()
 	];
 };
 

@@ -70,6 +70,7 @@ Game.ButtonLevel.prototype.start = function (onSuccess, onFailure) {
 	for (var i = 0; i < this.uiButtons.length; ++i) {
 		if (this.validButton === this.uiButtons[i]) {
 			this.uiButtons[i].click(function () {
+				Game.MemoryLevel.lastButton = $(this).data('button');
 				Game.playSound('click');
 				onSuccess();
 			});

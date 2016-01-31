@@ -87,6 +87,7 @@ Game.SequenceLevel.prototype.start = function (onSuccess, onFailure) {
 };
 
 Game.SequenceLevel.prototype.onButtonClick = function (index) {
+	Game.MemoryLevel.lastButton = this.uiButtons[index].data('button');
 	if (!this.uiButtons[index].hasClass('game-image-button-on')) {
 		Game.playSound('click');
 		this.sequence.push(index);
