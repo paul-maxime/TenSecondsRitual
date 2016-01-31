@@ -18,8 +18,9 @@ Game.SequenceLevel.MESSAGES = [
 	'Activate the [2] after pressing the [1], then push the [3].',
 	'The manual says the [1] must be pressed first and the [3] last.',
 	'We do not know the first button you should press, but you should press the [2] and the [3] after.',
-	'Do not panic! The [1], the [2], the [3]! Go!',
-	'As long as you do not push the [3] before the [2] and press the [1] first, you shall be fine.'
+	'Do not panic! The [1], the [2], the [3]! Go! Yes, in that order!',
+	'As long as you do not push the [3] before the [2] and press the [1] first, you shall be fine.',
+	'The [3] and the [2] cannot be activated without activating [1] first.<br>Therefore the [2] should not be pressed after the [3].'
 ];
 
 Game.SequenceLevel.prototype.start = function (onSuccess, onFailure) {

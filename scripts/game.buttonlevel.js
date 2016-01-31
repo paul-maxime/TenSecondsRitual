@@ -46,7 +46,9 @@ Game.ButtonLevel.MESSAGES = [
 	'Pressing the [button] is certainly gonna work.',
 	'What you are looking for is the [button].',
 	'Thou shalt press the [button]!',
-	'Do NOT press anything other than the [button]!'
+	'Do NOT press anything other than the [button]!',
+	'I have good faith in the [button].',
+	'The [button] will increase our lifespan by 10 seconds.'
 ];
 
 Game.ButtonLevel.prototype.start = function (onSuccess, onFailure) {

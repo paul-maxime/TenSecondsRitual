@@ -13,16 +13,24 @@ Game.SwitchesLevel.MESSAGES = {
 	2: [
 		'Activate the [1] and the [2].',
 		'You need to switch the [1] and the [2] on!',
-		'It says the [1] and the [2] in my book.'
+		'It says the [1] and the [2] in my book.',
+		'Maybe if we mix the [1] and the [2]...',
+		'The [1] + the [2] = BOOM! No, just kidding, push them!',
+		'If only you could press the [1] and the [2] faster...'
 	],
 	3: [
 		'Activate the [1], the [2] and the [3].',
 		'You need to switch the [1], the [2] and the [3] on!',
 		'Just activate the [1], the [2] and the [3] and we won\'t die.',
+		'I was told the [1] and the [2] could never work without the [3].',
+		'Based on my knowledge, the [1], the [2] and the [3] could delay the mechanism.'
 	],
 	4: [
 		'Activate the [1], the [2], the [3] and the [4].',
-		'You need to switch the [1], the [2], the [3] and [4] on!'
+		'You need to switch the [1], the [2], the [3] and [4] on!',
+		'Do not stress: the [1], the [2], the [3] and the [4].',
+		'Press the [2], the [3] and the [4]. Oh! I forgot the [1].',
+		'What are you waiting for? Press the [1], the [2], the [3] and the [4]!'
 	]
 };
 
