@@ -93,6 +93,21 @@ body {
 	margin-bottom: 0px;
 }
 
+#about-container {
+	position: fixed;
+	left: 15px;
+	bottom: 15px;
+}
+
+#about-container p {
+	margin-top: 5px;
+	margin-bottom: 0px;
+}
+
+#about-container a {
+	color: #BFBFBF;
+}
+
 .options-link {
 	text-decoration: underline;
 	cursor: pointer;
