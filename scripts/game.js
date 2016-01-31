@@ -8,6 +8,10 @@ Utils.randomElement = function (array) {
 	return array[Math.floor(Math.random() * array.length)];
 };
 
+Utils.nextInt = function (min, max) {
+	return Math.floor(Math.random() * (max - min)) + min;
+};
+
 Utils.shuffleArray = function (array) {
     var counter = array.length;
     while (counter > 0) {
@@ -26,7 +30,6 @@ Game = {
 	now: 0,
 	start: 0,
 	score: 0,
-	surviveTime: 0,
 	level: null,
 	levels: null,
 	music: null,
@@ -38,6 +41,15 @@ Game = {
 	musicEnabled: true,
 	soundEnabled: true
 };
+
+Game.RETRY_MESSAGES = [
+	'Wanna try again? Click!',
+	'Click here to do better than that.',
+	'Do not lose hope! Try again here!',
+	'You can do it. You are underestimating yourself. Click here.',
+	'If you click here, you\'ll get free imaginary cake for trying again.',
+	'Is this how you want people to remember you? No? Then click!'
+];
 
 Game.initialize = function () {
 	Game.initializeLevels();
@@ -56,15 +68,19 @@ Game.initialize = function () {
 
 	$('#options-music').click(Game.toggleMusic);
 	$('#options-sound').click(Game.toggleSound);
-
+	$('#game-level-restart').click(Game.startGame);
+	
 	Game.startGame();
 };
 
 Game.startGame = function () {
+	Game.music.currentTime = 0;
 	if (Game.musicEnabled) {
 		Game.music.play();
 	}
+	$('#game-level-restart').hide();
 	Game.start = Date.now();
+	Game.score = 0;
 	Game.startLevel();
 };
 
@@ -98,6 +114,7 @@ Game.toggleSound = function () {
 Game.initializeLevels = function () {
 	Game.levels = [
 		new Game.ButtonLevel(),
+		new Game.SwitchesLevel(),
 		new Game.SequenceLevel()
 	];
 };
@@ -141,15 +158,21 @@ Game.successLevel = function () {
 };
 
 Game.failLevel = function () {
-	Game.playSound('fail');
 	clearInterval(Game.timerId);
 	Game.level.clear();
+	Game.playSound('fail');
+	//Game.startLevel();
+	Game.gameOver();
+};
+
+Game.gameOver = function () {
 	Game.level = null;
 	Game.setTimer(0); 
 	Game.music.pause();
-	Game.surviveTime = Math.floor((Date.now() - Game.start) / 1000);
+	var surviveTime = Math.floor((Date.now() - Game.start) / 1000);
 	$('#game-timer').removeClass('game-timer-alert');
-	$('#game-level-instructions').html('Game over! The entire solar system exploded.<br>You performed ' + Game.score + ' ritual'+(Game.score===1?'':'s')+' and survived ' + Game.surviveTime + ' seconds.');
+	$('#game-level-instructions').html('Game over! The entire solar system exploded.<br>You performed ' + Game.score + ' ritual'+(Game.score===1?'':'s')+' and survived ' + surviveTime + ' second'+(surviveTime===1?'':'s')+'.');
+	$('#game-level-restart').text(Utils.randomElement(Game.RETRY_MESSAGES)).show();
 };
 
 Game.setTimer = function (value) {
@@ -232,7 +255,9 @@ Game.ButtonLevel.prototype.start = function (onSuccess, onFailure) {
 	this.colors = Game.ButtonLevel.COLORS.slice();
 	this.shapes = Game.ButtonLevel.SHAPES.slice();
 	this.uiButtons = [];
-	for (var i = 0; i < Math.floor(Math.random() * 4) + 4; ++i) {
+	
+	var buttonsCount = Utils.nextInt(3, 7);
+	for (var i = 0; i < buttonsCount; ++i) {
 		var button = this.pickRandomButton();
 		this.uiButtons.push($('<img>')
 			.attr('src', 'assets/images/shapes/tile'+button.color+'_'+(button.shape<10?'0':'')+button.shape+'.png')
@@ -292,9 +317,116 @@ Game.ButtonLevel.prototype.clear = function () {
 };
 
 
-Game.SequenceLevel = function () {
+Game.SwitchesLevel = function () {
 	this.requiredScore = 10;
-	this.uiLevel = Game.createLevelContainer('buttons');
+	this.uiLevel = Game.createLevelContainer('switches');
+};
+
+Game.SwitchesLevel.MESSAGES = {
+	2: [
+		'Activate the [1] and the [2].',
+		'You need to switch the [1] and the [2] on!',
+		'It says the [1] and the [2] in my book.'
+	],
+	3: [
+		'Activate the [1], the [2] and the [3].',
+		'You need to switch the [1], the [2] and the [3] on!',
+		'Just activate the [1], the [2] and the [3] and we won\'t die.',
+	],
+	4: [
+		'Activate the [1], the [2], the [3] and the [4].',
+		'You need to switch the [1], the [2], the [3] and [4] on!'
+	]
+};
+
+Game.SwitchesLevel.prototype.start = function (onSuccess, onFailure) {
+	this.onSuccess = onSuccess;
+	this.colors = Game.ButtonLevel.COLORS.slice();
+	this.shapes = Game.ButtonLevel.SHAPES.slice();
+	this.uiButtons = [];
+	
+	var buttonsCount = Utils.nextInt(4, 8);
+	for (var i = 0; i < buttonsCount; ++i) {
+		var button = this.pickRandomButton();
+		this.uiButtons.push($('<img>')
+			.attr('src', 'assets/images/shapes/tile'+button.color+'_'+(button.shape<10?'0':'')+button.shape+'.png')
+			.addClass('game-image-button')
+			.data('button', button)
+			.data('index', i)
+			.data('valid', false)
+			.appendTo(this.uiLevel)
+		);
+	};
+	
+	this.remainings = [];
+	this.errors = 0;
+	var size = Utils.nextInt(2, 5);
+	while (this.remainings.length < size) {
+		var index = Utils.nextInt(0, buttonsCount);
+		if (this.remainings.indexOf(index) === -1) {
+			this.remainings.push(index);
+			this.uiButtons[index].data('valid', true);
+		}
+	}
+	this.remainings.sort();
+	
+	for (var i = 0; i < this.uiButtons.length; ++i) {
+		var self = this;
+		this.uiButtons[i].click(function () {
+			self.onButtonClick($(this).data('index'));
+		});
+	}
+	
+	var instructionText = Utils.randomElement(Game.SwitchesLevel.MESSAGES[size]);
+	for (var i = 0; i < this.remainings.length; ++i) {
+		var index = this.remainings[i];
+		var buttonText = '';
+		var rnd = Math.floor(Math.random() * 2);
+		if (rnd === 0) {
+			buttonText = '<b>' + this.uiButtons[index].data('button').name + '</b>';
+		} else {
+			buttonText = '<b>' + this.uiButtons[index].data('button').color + '</b> button';
+		}
+		instructionText = instructionText.replace('['+(i+1)+']', buttonText);
+	}
+	$('#game-level-instructions').html(instructionText);
+};
+
+Game.SwitchesLevel.prototype.onButtonClick = function (index) {
+	Game.playSound('click');
+	if (!this.uiButtons[index].hasClass('game-image-button-on')) {
+		this.uiButtons[index].removeClass('game-image-button').addClass('game-image-button-on');
+		if (this.uiButtons[index].data('valid') === true) {
+			var k = this.remainings.indexOf(index);
+			this.remainings.splice(k, 1);
+			if (this.remainings.length === 0 && this.errors === 0) {
+				this.onSuccess();
+			}
+		} else {
+			this.errors += 1;
+		}
+	} else {
+		this.uiButtons[index].removeClass('game-image-button-on').addClass('game-image-button');
+		if (this.uiButtons[index].data('valid') === true) {
+			this.remainings.push(index);			
+		} else {
+			this.errors -= 1;
+			if (this.remainings.length === 0 && this.errors === 0) {
+				this.onSuccess();
+			}
+		}
+	}
+};
+
+Game.SwitchesLevel.prototype.pickRandomButton = Game.ButtonLevel.prototype.pickRandomButton;
+Game.SwitchesLevel.prototype.pickRandomColor = Game.ButtonLevel.prototype.pickRandomColor;
+Game.SwitchesLevel.prototype.pickRandomShape = Game.ButtonLevel.prototype.pickRandomShape;
+Game.SwitchesLevel.prototype.clear = Game.ButtonLevel.prototype.clear;
+
+
+Game.SequenceLevel = function () {
+	this.requiredScore = 20;
+	this.uiLevel = Game.createLevelContainer('sequence');
 };
 
 Game.SequenceLevel.MESSAGES = [
@@ -303,10 +435,11 @@ Game.SequenceLevel.MESSAGES = [
 	'I think you should press the [3]. No, wait, press the [1] then the [2] first.',
 	'The [2] comes between the [3] and the [1], the [1] being the beginning.',
 	'Thou shalt press the [3] only after pressing the [2] and the [2] only after pressing the [1].',
-	'Activate the [2] after pressing [1], then push the [3]',
+	'Activate the [2] after pressing [1], then push the [3].',
 	'The manual says the [1] must be pressed first and the [3] last.',
 	'We do not know the first button you should press, but you should press the [2] and the [3] after.',
-	'Do not panic! The [1], the [2], the [3]! Go!'
+	'Do not panic! The [1], the [2], the [3]! Go!',
+	'As long as you do not push the [3] before the [2] and press the [1] first, you shall be fine.'
 ];
 
 Game.SequenceLevel.prototype.start = function (onSuccess, onFailure) {
@@ -348,19 +481,19 @@ Game.SequenceLevel.prototype.start = function (onSuccess, onFailure) {
 			rnd = Math.floor(Math.random() * 3);
 			if (rnd === 0) {
 				if (index === 0) {
-					pos = 'the 1st';
+					pos = '1st';
 				} else if (index === 1) {
-					pos = 'the 2nd';
+					pos = '2nd';
 				} else {
-					pos = 'the 3rd';
+					pos = '3rd';
 				}
 			} else {
 				if (index === 0) {
-					pos = 'the first';
+					pos = 'first';
 				} else if (index === 1) {
-					pos = 'the second';
+					pos = 'second';
 				} else {
-					pos = 'the third';
+					pos = 'third';
 				}
 			}
 			buttonText = '<b>' + pos + '</b> button';
