@@ -19,3 +19,15 @@ by 10 seconds. Hopefully, the unclear instructions are here to help you.
 * An invalid click may or may not kill you, depending on the instructions.
 
 * It gets harder over time.
+
+## Credits
+
+### Sprites and sounds: Kenney
+
+* http://www.kenney.nl/
+
+### Music: Derek Fiechter / SongsofHD
+
+* https://www.youtube.com/user/dfiechter2
+
+* https://www.youtube.com/user/SongsofHD
